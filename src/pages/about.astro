@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import { marked } from 'marked';
+import Layout from '../layouts/Layout.astro';
+import Teardrop from '../components/Teardrop.astro';
+import Gallery from '../components/Gallery.astro';
+import { getAbout, getSite } from '../lib/reader';
+import { resolveImage } from '../lib/images';
+
+const about = getAbout();
+const trailerName = getSite().trailerName?.trim() ?? '';
+const photo = await resolveImage(about.photo);
+const bodyHtml = await marked.parse(about.body || '');
+const specs = about.specs ?? [];
+
+const gallery = (
+  await Promise.all(
+    (about.gallery ?? []).map(async (p) => ({
+      img: await resolveImage(p.image),
+      caption: p.caption,
+    }))
+  )
+).filter((p) => p.img);
+---
+
+<Layout title={trailerName ? `About ${trailerName}` : 'About'} description="About our teardrop trailer.">
+  <div class="wrap page">
+    <div class="page__head">
+      <p class="eyebrow">The trailer</p>
+      <h1>{about.heading}</h1>
+    </div>
+
+    <div class="about">
+      <div>
+        {
+          photo && (
+            <Image
+              class="about__photo"
+              src={photo}
+              alt={about.heading}
+              widths={[480, 900]}
+              sizes="(max-width: 46rem) 100vw, 40rem"
+            />
+          )
+        }
+        <div class="prose" set:html={bodyHtml} />
+      </div>
+
+      {
+        specs.length > 0 && (
+          <aside class="spec">
+            <h2>
+              <Teardrop size={26} /> Specifications
+            </h2>
+            <dl>
+              {specs.map((s) => (
+                <div class="spec__row">
+                  <dt>{s.label}</dt>
+                  <dd>{s.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </aside>
+        )
+      }
+    </div>
+
+    {
+      gallery.length > 0 && (
+        <Gallery
+          title={trailerName || about.heading}
+          heading={trailerName ? `${trailerName} comes home` : 'Gallery'}
+          photos={gallery.map((p) => ({ img: p.img!, caption: p.caption }))}
+        />
+      )
+    }
+
+    <p class="colophon">
+      Own a teardrop trailer? This whole site is open-source —
+      <a href="https://github.com/timsneath/vistabule-journal-template">build your own logbook</a>.
+    </p>
+  </div>
+</Layout>
+
+<style>
+  .colophon {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .colophon a {
+    color: var(--teal);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+</style>

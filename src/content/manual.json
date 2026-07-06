@@ -1,0 +1,33 @@
+{
+  "intro": "Demo content — quick links to the makers and manuals behind your trailer's components. Handy when something needs a look while you're out on the road. Replace these with your own.",
+  "links": [
+    {
+      "what": "Trailer",
+      "part": "Your teardrop model",
+      "category": "Trailer",
+      "productUrl": "https://example.com",
+      "manualUrl": ""
+    },
+    {
+      "what": "Roof fan",
+      "part": "Example MaxxFan",
+      "category": "Comfort",
+      "productUrl": "https://example.com",
+      "manualUrl": ""
+    },
+    {
+      "what": "Cooktop",
+      "part": "Example two-burner",
+      "category": "Galley",
+      "productUrl": "https://example.com",
+      "manualUrl": ""
+    },
+    {
+      "what": "Battery",
+      "part": "Example 100Ah LiFePO4",
+      "category": "Electrical",
+      "productUrl": "https://example.com",
+      "manualUrl": ""
+    }
+  ]
+}

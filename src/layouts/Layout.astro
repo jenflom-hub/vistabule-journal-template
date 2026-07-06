@@ -1,0 +1,82 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/hanken-grotesk';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
+import '../styles/global.css';
+import { withBase } from '../lib/url';
+import { getSite } from '../lib/reader';
+import { joinNames } from '../lib/format';
+import Teardrop from '../components/Teardrop.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const site = getSite();
+const siteName = site.title || 'Travel journal';
+const trailerName = site.trailerName?.trim() ?? '';
+const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
+
+// Footer byline: "<site> — a teardrop logbook[ kept by <authors>]".
+const byline = joinNames(site.authors);
+
+// active nav state
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const path = Astro.url.pathname.replace(/\/$/, '');
+const nav = [
+  { label: 'Trips', href: withBase(), active: path === base || path.startsWith(`${base}/trips`) },
+  { label: trailerName ? `About ${trailerName}` : 'About', href: withBase('about'), active: path === `${base}/about` },
+  { label: "Owner's Manual", href: withBase('manual'), active: path === `${base}/manual` },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('favicon-32.png')} />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <div class="site">
+      <header class="site-header">
+        <div class="wrap site-header__inner">
+          <a class="brand" href={withBase()}>
+            <Teardrop size={42} />
+            {siteName}
+          </a>
+          <nav class="nav" aria-label="Primary">
+            {
+              nav.map((item) => (
+                <a href={item.href} aria-current={item.active ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <div class="wrap site-footer__inner">
+          <a class="footer-hatch" href={withBase('admin')} title="Add a journey" aria-label="Open the editor">
+            <Teardrop size={36} />
+          </a>
+          <p>{siteName} — a teardrop logbook{byline && <> kept by {byline}</>}</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#21372b" />
+  <!-- hitch -->
+  <path d="M9 42 L17 37" fill="none" stroke="#f4eee1" stroke-width="3" stroke-linecap="round" />
+  <!-- teardrop body: rounded cabin tapering to the galley -->
+  <path d="M14 45 C10 29 18 15 35 15 C52 15 57 26 57 41 C57 44 55 45 51 45 Z" fill="#f4eee1" />
+  <!-- porthole -->
+  <circle cx="28" cy="30" r="5" fill="#21372b" />
+  <!-- wheel + maple hubcap -->
+  <circle cx="34" cy="48" r="7.5" fill="#21372b" />
+  <circle cx="34" cy="48" r="2.6" fill="#c7894b" />
+</svg>

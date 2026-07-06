@@ -1,0 +1,59 @@
+---
+// A little hand-drawn teardrop trailer. Recolorable via CSS custom
+// properties (--td-body, --td-line, --td-glass) so it sits on light or dark
+// backgrounds. Decorative by default.
+interface Props {
+  size?: number;
+  class?: string;
+  title?: string;
+}
+const { size = 40, class: klass, title } = Astro.props;
+---
+
+<svg
+  class:list={['teardrop', klass]}
+  width={size}
+  height={(size * 84) / 128}
+  viewBox="0 0 128 84"
+  role={title ? 'img' : 'presentation'}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+>
+  {title && <title>{title}</title>}
+  <!-- hitch -->
+  <path d="M8 60 L31 47" fill="none" stroke="var(--td-line)" stroke-width="3" stroke-linecap="round" />
+  <circle cx="8" cy="60" r="3.4" fill="var(--td-line)" />
+  <!-- body (teardrop): tall rounded cabin at front, rounding off to the galley tail -->
+  <path
+    d="M27 57 C20 35 30 13 57 12 C88 11 112 26 116 51 C116.6 55 113.6 57 109 57 Z"
+    fill="var(--td-body)"
+    stroke="var(--td-line)"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+  <!-- galley hatch seam at the rear -->
+  <path d="M116 51 C109 40 100 34 92 31" fill="none" stroke="var(--td-line)" stroke-width="2" opacity="0.5" />
+  <!-- cabin door (front), the big rounded panel that wraps the window -->
+  <path
+    d="M39 51 C37.5 44 37.5 33 40 28 C42 24 47 22.6 54 22.5 C61 22.4 66 24 67 30 C67.8 35 67.6 46 66 51 C64.6 55 58 55.5 52 55.5 C45 55.5 40.4 54.5 39 51 Z"
+    fill="none"
+    stroke="var(--td-line)"
+    stroke-width="2"
+    opacity="0.5"
+  />
+  <!-- big side window: top arches up toward the rear, front edge upright -->
+  <path
+    d="M44 38 C43.2 36 43 33 43.4 31 C43.8 28.8 45.4 27.6 48 27.2 C53 26.4 58 26.2 61 26.7 C62.6 27 63.2 28 63.2 29.6 L63.3 33.6 C63.4 35.4 62.1 36.6 59.9 37 C54 37.9 48.4 38.5 44 38 Z"
+    fill="var(--td-glass)"
+    stroke="var(--td-line)"
+    stroke-width="2.2"
+    stroke-linejoin="round"
+  />
+  <!-- round porthole window (center) -->
+  <circle cx="81" cy="30" r="8.5" fill="var(--td-glass)" stroke="var(--td-line)" stroke-width="2.5" />
+  <!-- fender over the wheel -->
+  <path d="M58 57 a16 16 0 0 1 32 0" fill="none" stroke="var(--td-line)" stroke-width="3" stroke-linecap="round" />
+  <!-- wheel -->
+  <circle cx="74" cy="60" r="12" fill="var(--td-line)" />
+  <circle cx="74" cy="60" r="4.2" fill="var(--td-glass)" />
+</svg>

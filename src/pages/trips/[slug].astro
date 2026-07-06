@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import TripMap from '../../components/TripMap.astro';
+import Gallery from '../../components/Gallery.astro';
+import { getAllTrips, getTrip, getSite } from '../../lib/reader';
+import { resolveImage } from '../../lib/images';
+import { formatDateRange } from '../../lib/format';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const trips = await getAllTrips();
+  return trips.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getTrip(slug!);
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+// Chronological neighbours. getAllTrips() is sorted newest-first, so the entry
+// before us in the list is the *later* trip and the one after is the *earlier*.
+const allTrips = await getAllTrips();
+const idx = allTrips.findIndex((t) => t.slug === slug);
+const later = idx > 0 ? allTrips[idx - 1] : null;
+const earlier = idx >= 0 && idx < allTrips.length - 1 ? allTrips[idx + 1] : null;
+
+function nights(start: string, end?: string | null) {
+  if (!end || end === start) return 0;
+  const a = new Date(`${start}T00:00:00`).getTime();
+  const b = new Date(`${end}T00:00:00`).getTime();
+  return Math.max(0, Math.round((b - a) / 86_400_000));
+}
+const nightsOut = nights(entry.startDate, entry.endDate);
+
+const cover = await resolveImage(entry.coverPhoto);
+const photos = await Promise.all(
+  entry.photos.map(async (p) => ({
+    caption: p.caption,
+    img: await resolveImage(p.image),
+  }))
+);
+const gallery = photos.filter((p) => p.img);
+const hasNotes = Boolean(entry.notesOne || entry.notesTwo);
+
+// The two note voices are labelled by the site's authors (site.json). Falls
+// back to a generic label when an author name isn't set.
+const authors = getSite().authors ?? [];
+const noteLabel = (i: number) => (authors[i]?.trim() ? `${authors[i].trim()}'s notes` : 'Notes');
+---
+
+<Layout title={entry.title} description={`${entry.location} · ${entry.miles} miles`}>
+  <article class="wrap trip">
+    <a class="back" href={withBase()}>← All journeys</a>
+    <h1>{entry.title}</h1>
+    <p class="trip__loc">{entry.location}</p>
+
+    <dl class="logstrip">
+      <div>
+        <dt>Dates</dt>
+        <dd>{formatDateRange(entry.startDate, entry.endDate)}</dd>
+      </div>
+      <div>
+        <dt>Distance</dt>
+        <dd>{entry.miles.toLocaleString()} mi</dd>
+      </div>
+      <div>
+        <dt>Nights out</dt>
+        <dd>{nightsOut}</dd>
+      </div>
+    </dl>
+
+    {
+      entry.stays.length > 0 && (
+        <div class="stays">
+          <span class="stays__label">Where we stayed</span>
+          <ul class="stays__list">
+            {entry.stays.map((s) => (
+              <li>
+                <span class="stay">{s}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    {
+      cover && (
+        <Image
+          class="cover"
+          src={cover}
+          alt={`Cover photo from ${entry.title}`}
+          widths={[600, 1000, 1600]}
+          sizes="(max-width: 64rem) 100vw, 64rem"
+        />
+      )
+    }
+
+    <TripMap waypoints={entry.waypoints} route={entry.route} roundTrip={entry.roundTrip} />
+
+    {
+      hasNotes && (
+        <div class="notes">
+          {entry.notesOne && (
+            <section class="note">
+              <h3>{noteLabel(0)}</h3>
+              <p>{entry.notesOne}</p>
+            </section>
+          )}
+          {entry.notesTwo && (
+            <section class="note">
+              <h3>{noteLabel(1)}</h3>
+              <p>{entry.notesTwo}</p>
+            </section>
+          )}
+        </div>
+      )
+    }
+
+    <Gallery title={entry.title} photos={gallery.map((p) => ({ img: p.img!, caption: p.caption }))} />
+
+    {
+      (earlier || later) && (
+        <nav class="tripnav" aria-label="Other journeys">
+          {earlier ? (
+            <a class="tripnav__link tripnav__link--prev" href={withBase(`trips/${earlier.slug}`)} aria-label={`Earlier journey: ${earlier.entry.title}`}>
+              <span class="tripnav__dir">← Earlier</span>
+              <span class="tripnav__title">{earlier.entry.title}</span>
+              <span class="tripnav__date">{formatDateRange(earlier.entry.startDate, earlier.entry.endDate)}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {later ? (
+            <a class="tripnav__link tripnav__link--next" href={withBase(`trips/${later.slug}`)} aria-label={`Later journey: ${later.entry.title}`}>
+              <span class="tripnav__dir">Later →</span>
+              <span class="tripnav__title">{later.entry.title}</span>
+              <span class="tripnav__date">{formatDateRange(later.entry.startDate, later.entry.endDate)}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Layout>

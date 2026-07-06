@@ -1,0 +1,39 @@
+{
+  "title": "First long haul",
+  "startDate": "2026-06-20",
+  "endDate": "2026-06-23",
+  "location": "High Desert Loop",
+  "stays": ["Juniper Campground", "Riverbend RV Park"],
+  "miles": 214,
+  "coverPhoto": "/src/assets/trips/trip2-cover.jpg",
+  "waypoints": [
+    {
+      "label": "Home",
+      "kind": "stop",
+      "location": "{\"type\":\"Point\",\"coordinates\":[-122.6765,45.5231]}"
+    },
+    {
+      "label": "Juniper Campground",
+      "kind": "stop",
+      "location": "{\"type\":\"Point\",\"coordinates\":[-121.52,44.06]}"
+    },
+    {
+      "label": "Riverbend RV Park",
+      "kind": "stop",
+      "location": "{\"type\":\"Point\",\"coordinates\":[-121.31,44.26]}"
+    }
+  ],
+  "roundTrip": false,
+  "photos": [
+    {
+      "image": "/src/assets/trips/trip2-1.jpg",
+      "caption": "Placeholder — your photos will look much better."
+    },
+    {
+      "image": "/src/assets/trips/trip2-2.jpg",
+      "caption": "The map above is drawn along real roads between your waypoints."
+    }
+  ],
+  "notesOne": "The route map follows real roads between the waypoints you add — it's computed once at build time and cached, so the live site makes no network calls.",
+  "notesTwo": "Add \"Via\" waypoints to nudge the drawn line onto the roads you actually took, without adding a pin to the map."
+}

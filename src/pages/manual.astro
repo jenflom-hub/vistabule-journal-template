@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getManual, getSite } from '../lib/reader';
+
+const manual = getManual();
+const links = manual.links ?? [];
+const trailerName = getSite().trailerName?.trim() ?? '';
+
+// Group by system, in a sensible field-manual order.
+const order = ['Trailer', 'Galley', 'Electrical', 'Plumbing', 'Towing', 'Comfort', 'Other'];
+const groups = order
+  .map((name) => ({ name, items: links.filter((l) => (l.category || 'Other') === name) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<Layout title="Owner's Manual" description={`Links to the makers and manuals behind ${trailerName ? `${trailerName}'s` : 'the'} components.`}>
+  <div class="wrap page">
+    <div class="page__head">
+      <p class="eyebrow">Field reference</p>
+      <h1>Owner's Manual</h1>
+    </div>
+
+    {manual.intro && <p class="manual__intro">{manual.intro}</p>}
+
+    {
+      groups.map((group) => (
+        <section class="system">
+          <h2 class="system__name">{group.name}</h2>
+          <ul class="parts">
+            {group.items.map((item) => (
+              <li class="part">
+                <div class="part__main">
+                  <span class="part__what">{item.what}</span>
+                  {item.part && <span class="part__model">{item.part}</span>}
+                </div>
+                <div class="part__links">
+                  {item.productUrl && (
+                    <a class="part__link" href={item.productUrl} target="_blank" rel="noopener noreferrer">
+                      Product ↗
+                    </a>
+                  )}
+                  {item.manualUrl && (
+                    <a class="part__link part__link--manual" href={item.manualUrl} target="_blank" rel="noopener noreferrer">
+                      Manual ↗
+                    </a>
+                  )}
+                  {!item.productUrl && !item.manualUrl && <span class="part__none">—</span>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Layout>

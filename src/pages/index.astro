@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TripCard from '../components/TripCard.astro';
+import Teardrop from '../components/Teardrop.astro';
+import { getAllTrips, getSite } from '../lib/reader';
+import { resolveImage } from '../lib/images';
+
+const site = getSite();
+const trips = await getAllTrips();
+
+const totalMiles = trips.reduce((sum, t) => sum + (t.entry.miles ?? 0), 0);
+
+function nights(start: string, end?: string | null) {
+  if (!end || end === start) return 0;
+  const a = new Date(`${start}T00:00:00`).getTime();
+  const b = new Date(`${end}T00:00:00`).getTime();
+  return Math.max(0, Math.round((b - a) / 86_400_000));
+}
+const totalNights = trips.reduce((s, t) => s + nights(t.entry.startDate, t.entry.endDate), 0);
+
+const cards = await Promise.all(
+  trips.map(async (t) => ({
+    slug: t.slug,
+    entry: t.entry,
+    cover: await resolveImage(t.entry.coverPhoto),
+  }))
+);
+
+// odometer reels (pad to at least 4 cells; dim the leading zeros, spotlight ones)
+const padded = String(totalMiles).padStart(Math.max(4, String(totalMiles).length), '0');
+const digits = padded.split('');
+
+const title = site.title || 'Travel journal';
+const trailerName = site.trailerName?.trim() ?? '';
+const eyebrow = trailerName ? `Field logbook · a teardrop named ${trailerName}` : 'Field logbook';
+const odometerLabel = `${totalMiles.toLocaleString()}.0 miles travelled${trailerName ? ` with ${trailerName}` : ''}`;
+---
+
+<Layout title={title} description={site.tagline ?? undefined}>
+  <section class="hero">
+    <div class="wrap hero__inner">
+      <div>
+        <p class="eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        {site.tagline && <p class="hero__tagline">{site.tagline}</p>}
+
+        <div class="odometer" data-miles={totalMiles}>
+          <div class="odometer__reels" role="img" aria-label={odometerLabel}>
+            {digits.map((d) => <span class="reel">{d}</span>)}
+            <span class="odometer__pt" aria-hidden="true">.</span>
+            <span class="reel reel--tenths" aria-hidden="true">0</span>
+          </div>
+          <div class="odometer__caption">
+            <span class="gauge"><b>{totalNights}</b> nights out</span>
+            <span class="gauge"><b>{trips.length}</b> {trips.length === 1 ? 'journey' : 'journeys'}</span>
+          </div>
+        </div>
+      </div>
+
+      <Teardrop size={220} class="hero__art" />
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The journeys</h2>
+      <span class="rule"></span>
+    </div>
+
+    {
+      trips.length === 0 ? (
+        <p class="empty">
+          No trips logged yet. Add the first one in <a href={import.meta.env.BASE_URL + 'admin'}>the editor</a>.
+        </p>
+      ) : (
+        <ul class="trip-grid">
+          {cards.map((c) => (
+            <TripCard slug={c.slug} entry={c.entry} cover={c.cover} />
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</Layout>
+
+<script>
+  const od = document.querySelector<HTMLElement>('[data-miles]');
+  if (od) {
+    const target = parseInt(od.dataset.miles || '0', 10);
+    const reels = [...od.querySelectorAll<HTMLElement>('.reel:not(.reel--tenths)')];
+    const width = reels.length;
+    const render = (n: number) => {
+      const s = String(Math.round(n)).padStart(width, '0').slice(-width);
+      reels.forEach((r, i) => (r.textContent = s[i]));
+    };
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || target === 0) {
+      render(target);
+    } else {
+      const dur = 1100;
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / dur);
+        render(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+        else render(target);
+      };
+      requestAnimationFrame(tick);
+    }
+  }
+</script>

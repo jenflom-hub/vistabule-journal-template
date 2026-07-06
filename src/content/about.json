@@ -1,0 +1,27 @@
+{
+  "heading": "Meet Nessie",
+  "photo": "/src/assets/about/placeholder-1.jpg",
+  "body": "This is demo content. **Nessie** is the imaginary teardrop trailer used to show off this template.\n\nReplace this page with your own trailer's story — how you found her, what you love about her, where she came from. You can write in [Markdown](https://www.markdownguide.org/basic-syntax/): **bold**, *italic*, [links](https://example.com), and lists all work.\n\nEdit everything here through the visual editor at `/admin`, or by editing `src/content/about.json` directly. The spec sheet on the right and the gallery below are optional — fill them in or remove them.",
+  "gallery": [
+    {
+      "image": "/src/assets/about/placeholder-2.jpg",
+      "caption": "A placeholder photo — swap in your own."
+    },
+    {
+      "image": "/src/assets/about/placeholder-3.jpg",
+      "caption": "Captions are optional."
+    },
+    {
+      "image": "/src/assets/about/placeholder-4.jpg",
+      "caption": "Add as many as you like."
+    }
+  ],
+  "specs": [
+    { "label": "Maker", "value": "Your trailer's maker" },
+    { "label": "Model", "value": "Model name" },
+    { "label": "Sleeps", "value": "2" },
+    { "label": "Galley", "value": "Rear hatch kitchen" },
+    { "label": "Dry weight", "value": "~1,500 lb" },
+    { "label": "Length", "value": "~15 ft" }
+  ]
+}

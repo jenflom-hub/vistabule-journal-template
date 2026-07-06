@@ -1,0 +1,22 @@
+---
+// Self-hosted Sveltia CMS admin, served at /admin/. This is a real Astro
+// route (not a public/ file) so it resolves cleanly in `astro dev` as well as in
+// the production build. The Sveltia config and the vendored CMS script stay as
+// static files in public/admin/ and are referenced relative to this page.
+import { withBase } from '../../lib/url';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Journal · Admin</title>
+    <link href={withBase('admin/config.yml')} type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Sveltia CMS, vendored locally (no third-party CDN at runtime). -->
+    <script is:inline src={withBase('admin/sveltia-cms.js')}></script>
+  </body>
+</html>

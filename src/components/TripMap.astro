@@ -1,0 +1,130 @@
+---
+import type { Waypoint } from '../lib/types';
+
+interface Props {
+  waypoints: readonly Waypoint[];
+  // Road-following geometry as [lat, lng] pairs, baked at build time. When
+  // present it's drawn as the route; otherwise we fall back to a straight line.
+  route?: readonly [number, number][];
+  // When true, the fallback line loops back to the first waypoint.
+  roundTrip?: boolean;
+}
+
+const { waypoints, route = [], roundTrip = false } = Astro.props;
+
+// Only keep waypoints with real coordinates. Both stops and via-points shape the
+// line/bounds; the client only draws pins for stops.
+const points = (waypoints ?? []).filter(
+  (w): w is Waypoint & { lat: number; lng: number } =>
+    typeof w.lat === 'number' && typeof w.lng === 'number'
+);
+---
+
+{
+  points.length > 0 && (
+    <div class="map-frame">
+      <div
+        id="trip-map"
+        data-points={JSON.stringify(points)}
+        data-route={JSON.stringify(route)}
+        data-roundtrip={roundTrip ? '1' : ''}
+      />
+    </div>
+  )
+}
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  type Point = { label?: string; kind?: 'stop' | 'via'; lat: number; lng: number };
+
+  const el = document.getElementById('trip-map');
+  if (el) {
+    const points: Point[] = JSON.parse(el.dataset.points || '[]');
+    const route: [number, number][] = JSON.parse(el.dataset.route || '[]');
+    const roundTrip = el.dataset.roundtrip === '1';
+    const latlngs: [number, number][] = points.map((p) => [p.lat, p.lng]);
+    // Close the loop for the straight-line fallback (the baked route already does).
+    if (roundTrip && latlngs.length > 1) latlngs.push(latlngs[0]);
+
+    const map = L.map(el, { scrollWheelZoom: false });
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+
+    // The route line — ember, like a route traced on a paper map. Prefer the
+    // baked road-following geometry; fall back to a straight line between stops.
+    const hasRoute = route.length > 1;
+    const line = hasRoute ? route : latlngs;
+    if (line.length > 1) {
+      L.polyline(line, {
+        color: '#d2552f',
+        weight: hasRoute ? 4 : 3.5,
+        opacity: 0.9,
+        // Solid for a real road route; dashed when it's just a guide between dots.
+        dashArray: hasRoute ? undefined : '1 9',
+        lineJoin: 'round',
+        lineCap: 'round',
+      }).addTo(map);
+    }
+
+    // Vector circle markers for stops only (no bundled icon images needed).
+    // 'via' points just shape the route line, so they get no pin.
+    points
+      .filter((p) => p.kind !== 'via')
+      .forEach((p) => {
+        const marker = L.circleMarker([p.lat, p.lng], {
+          radius: 7,
+          color: '#fbf7ef',
+          weight: 2.5,
+          fillColor: '#2e7e73',
+          fillOpacity: 1,
+        }).addTo(map);
+        if (p.label) {
+          marker.bindTooltip(p.label, { direction: 'top', offset: [0, -6] });
+        }
+      });
+
+    // Frame the whole route when we have one, else the waypoints.
+    const extent = hasRoute ? route : latlngs;
+    if (extent.length > 1) {
+      map.fitBounds(extent, { padding: [36, 36] });
+    } else {
+      map.setView(latlngs[0], 11);
+    }
+  }
+</script>
+
+<style>
+  .map-frame {
+    margin: 1.9rem 0;
+    padding: 6px;
+    background: var(--canvas);
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  #trip-map {
+    height: 23rem;
+    width: 100%;
+    border-radius: calc(var(--radius) - 7px);
+    z-index: 0;
+  }
+  /* a warm, slightly faded paper-map treatment for the tiles only */
+  :global(.map-frame .leaflet-tile) {
+    filter: sepia(0.12) saturate(0.85) brightness(1.02);
+  }
+  :global(.map-frame .leaflet-container) {
+    font: inherit;
+    background: var(--paper);
+  }
+  :global(.map-frame .leaflet-tooltip) {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    border-radius: 6px;
+    border-color: var(--line-strong);
+  }
+</style>

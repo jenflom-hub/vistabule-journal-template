@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { TripEntry } from '../lib/types';
+import { formatDateRange } from '../lib/format';
+import { withBase } from '../lib/url';
+import Teardrop from './Teardrop.astro';
+
+interface Props {
+  slug: string;
+  entry: TripEntry;
+  cover: ImageMetadata | null;
+}
+
+const { slug, entry, cover } = Astro.props;
+---
+
+<li class="card">
+  <a href={withBase(`trips/${slug}`)}>
+    {
+      cover ? (
+        <Image
+          class="card__img"
+          src={cover}
+          alt={`Cover photo from ${entry.title}`}
+          widths={[400, 800]}
+          sizes="(max-width: 600px) 100vw, 400px"
+        />
+      ) : (
+        <div class="card__img-empty">
+          <Teardrop size={84} />
+        </div>
+      )
+    }
+    <div class="card__body">
+      <h3>{entry.title}</h3>
+      <p class="card__loc">{entry.location}</p>
+      <div class="card__foot">
+        <span class="card__date">{formatDateRange(entry.startDate, entry.endDate)}</span>
+        <span class="chip">{entry.miles.toLocaleString()} mi</span>
+      </div>
+    </div>
+  </a>
+</li>

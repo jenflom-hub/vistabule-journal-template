@@ -1,0 +1,17 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	// ── Make it yours ─────────────────────────────────────────────────────────
+	// This name becomes your default URL: <name>.<your-subdomain>.workers.dev.
+	// Change it to something of your own.
+	"name": "my-teardrop-journal",
+	"compatibility_date": "2026-06-22",
+	// Fully static Astro build. Cloudflare serves the files in ./dist directly —
+	// no worker script needed when the site lives at the root of a domain. Add a
+	// custom domain in the Cloudflare dashboard (Workers & Pages → your worker →
+	// Settings → Domains & Routes) once it's deployed.
+	//
+	// (Hosting under a sub-path instead? See the README section
+	// "Advanced: hosting under a sub-path" — that setup adds a small worker.)
+	"assets": { "directory": "./dist" },
+	"observability": { "enabled": true }
+}
