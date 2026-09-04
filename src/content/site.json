@@ -1,6 +1,8 @@
 {
-  "title": "Travels with Nessie",
-  "tagline": "A demo journal — replace this with your own teardrop adventures.",
-  "trailerName": "Nessie",
-  "authors": ["Alex", "Sam"]
+  "title": "JF Sample Site",
+  "tagline": "JF testing out the site functionality",
+  "trailerName": "JF",
+  "authors": [
+    "JF"
+  ]
 }
