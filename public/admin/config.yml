@@ -11,7 +11,7 @@
 
 backend:
   name: github
-  repo: your-username/your-repo # ← change me
+  repo: jenflom-hub/vistabule-journal-template # ← change me
   branch: main
   # Optional one-click GitHub sign-in (see README). Delete this line to use
   # token sign-in only:
