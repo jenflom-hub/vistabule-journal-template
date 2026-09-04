@@ -3,8 +3,9 @@
 	// ── Make it yours ─────────────────────────────────────────────────────────
 	// This name becomes your default URL: <name>.<your-subdomain>.workers.dev.
 	// Change it to something of your own.
-	"name": "my-teardrop-journal",
+	"name": "JF-Sample-Journal",
 	"compatibility_date": "2026-06-22",
+	"assets": { "directory": "./dist" },
 	// Fully static Astro build. Cloudflare serves the files in ./dist directly —
 	// no worker script needed when the site lives at the root of a domain. Add a
 	// custom domain in the Cloudflare dashboard (Workers & Pages → your worker →

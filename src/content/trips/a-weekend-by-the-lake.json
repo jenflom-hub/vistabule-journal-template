@@ -10,7 +10,7 @@
   "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
   "waypoints": [
     {
-      "label": "Hoover Dam Kayak Trip",
+      "label": "Hoover Dam",
       "kind": "stop",
       "location": "{\"type\":\"Point\",\"coordinates\":[-114.7374858,36.0157189]}"
     }
