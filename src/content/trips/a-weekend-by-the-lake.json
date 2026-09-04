@@ -8,9 +8,20 @@
   ],
   "miles": 5,
   "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
-  "waypoints": [],
+  "waypoints": [
+    {
+      "label": "Hoover Dam",
+      "kind": "stop",
+      "location": "{\"type\":\"Point\",\"coordinates\":[-114.7374858,36.0157189]}"
+    }
+  ],
   "roundTrip": false,
-  "photos": [],
+  "photos": [
+    {
+      "image": "/src/assets/trips/Vegas1 - 1.JPG",
+      "caption": ""
+    }
+  ],
   "notesOne": "",
   "notesTwo": ""
 }
