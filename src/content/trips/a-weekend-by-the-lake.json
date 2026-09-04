@@ -6,7 +6,7 @@
   "stays": [
     "New York New York"
   ],
-  "miles": 0,
+  "miles": 5,
   "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
   "waypoints": [
     {
@@ -16,7 +16,12 @@
     }
   ],
   "roundTrip": false,
-  "photos": [],
+  "photos": [
+    {
+      "image": "/src/assets/trips/Vegas1 - 1.JPG",
+      "caption": ""
+    }
+  ],
   "notesOne": "",
   "notesTwo": ""
 }
