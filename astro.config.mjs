@@ -6,7 +6,7 @@ export default defineConfig({
   // ── Make it yours ────────────────────────────────────────────────────────
   // `site` is your public URL. Set it to your own domain (or your Cloudflare
   // *.workers.dev URL for now). It's used to build absolute URLs.
-  site: 'https://example.com',
+  site: 'https://vistabule-journal-template.jenflom.workers.dev',
 
   // `base` is the path the site is served under. Leave it as '/' if the site
   // lives at the root of a domain or subdomain (e.g. journal.example.com).
