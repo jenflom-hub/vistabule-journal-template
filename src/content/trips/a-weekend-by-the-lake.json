@@ -7,21 +7,10 @@
     "New York New York"
   ],
   "miles": 5,
-  "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
-  "waypoints": [
-    {
-      "label": "Hoover Dam Kayak Trip",
-      "kind": "stop",
-      "location": "{\"type\":\"Point\",\"coordinates\":[-114.7374858,36.0157189]}"
-    }
-  ],
+  "coverPhoto": "",
+  "waypoints": [],
   "roundTrip": false,
-  "photos": [
-    {
-      "image": "/src/assets/trips/Vegas1 - 1.JPG",
-      "caption": ""
-    }
-  ],
+  "photos": [],
   "notesOne": "",
   "notesTwo": ""
 }
