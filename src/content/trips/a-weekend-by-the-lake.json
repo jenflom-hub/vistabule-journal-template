@@ -1,39 +1,22 @@
 {
-  "title": "A weekend by the lake",
-  "startDate": "2026-05-15",
-  "endDate": "2026-05-17",
-  "location": "Demo Lake State Park",
-  "stays": ["Demo Lake State Park — site 12"],
-  "miles": 96,
-  "coverPhoto": "/src/assets/trips/trip1-cover.jpg",
+  "title": "Anniversary Trip",
+  "startDate": "2017-06-01",
+  "endDate": "2017-06-04",
+  "location": "Vegas",
+  "stays": [
+    "New York New York"
+  ],
+  "miles": 0,
+  "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
   "waypoints": [
     {
-      "label": "Home",
+      "label": "Hoover Dam Kayak Trip",
       "kind": "stop",
-      "location": "{\"type\":\"Point\",\"coordinates\":[-122.6765,45.5231]}"
-    },
-    {
-      "label": "Coffee stop",
-      "kind": "via",
-      "location": "{\"type\":\"Point\",\"coordinates\":[-122.3,45.6]}"
-    },
-    {
-      "label": "Demo Lake State Park",
-      "kind": "stop",
-      "location": "{\"type\":\"Point\",\"coordinates\":[-121.78,45.71]}"
+      "location": "{\"type\":\"Point\",\"coordinates\":[-114.7374858,36.0157189]}"
     }
   ],
-  "roundTrip": true,
-  "photos": [
-    {
-      "image": "/src/assets/trips/trip1-1.jpg",
-      "caption": "Placeholder photo — swap in your own."
-    },
-    {
-      "image": "/src/assets/trips/trip1-2.jpg",
-      "caption": "Golden hour by the water (not really — it's a placeholder)."
-    }
-  ],
-  "notesOne": "This is where the first author's notes go. Every trip has two note fields so two travellers can each keep their own log. The labels come from the Authors you set in Site settings.",
-  "notesTwo": "And this is the second author's voice. Delete this demo trip once you've added a real one — or edit it in the visual editor at /admin."
+  "roundTrip": false,
+  "photos": [],
+  "notesOne": "",
+  "notesTwo": ""
 }
