@@ -1,0 +1,27 @@
+{
+  "title": "15th Anniversary Trip",
+  "startDate": "2017-05-31",
+  "endDate": "2017-06-04",
+  "location": "Las Vegas",
+  "stays": [
+    "New York New York"
+  ],
+  "miles": 5,
+  "coverPhoto": "/src/assets/trips/Vegas - 1.JPG",
+  "waypoints": [
+    {
+      "label": "Kayak Tour",
+      "kind": "stop",
+      "location": "{\"type\":\"Point\",\"coordinates\":[-114.7374858,36.0157189]}"
+    }
+  ],
+  "roundTrip": false,
+  "photos": [
+    {
+      "image": "/src/assets/trips/Vegas1 - 1.JPG",
+      "caption": ""
+    }
+  ],
+  "notesOne": "",
+  "notesTwo": ""
+}
